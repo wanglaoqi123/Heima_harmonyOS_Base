@@ -14,6 +14,7 @@
     "pages/02/StateStylesCase",
     "pages/02/ConditionCase",
     "pages/02/LoadingCase",
-    "pages/02/ForEachCse"
+    "pages/02/ForEachCse",
+    "pages/homework/HomeWork02"
   ]
 }
