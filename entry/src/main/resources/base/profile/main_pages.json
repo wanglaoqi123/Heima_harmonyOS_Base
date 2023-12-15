@@ -1,0 +1,19 @@
+{
+  "src": [
+    "pages/Index",
+    "pages/Login",
+    "pages/01/ComponentCase",
+    "pages/01/EventCase",
+    "pages/01/StateCase",
+    "pages/02/CounterCase",
+    "pages/02/StyleCase",
+    "pages/02/ImageCase",
+    "pages/02/ZhiHu",
+    "pages/02/TextStyle",
+    "pages/02/ExtendCase",
+    "pages/02/StateStylesCase",
+    "pages/02/ConditionCase",
+    "pages/02/LoadingCase",
+    "pages/02/ForEachCse"
+  ]
+}
