@@ -59,10 +59,21 @@ struct ZhiHu {
       likeNum: 100
     }
   ]
+  changeLike (obj: ReplyItem) {
+    if (obj.likeFlag) {
+      obj.likeFlag = false
+      obj.likeNum--
+    } else {
+      obj.likeFlag = true
+      obj.likeNum++
+    }
+    const index = this.commentList.findIndex(item => item.id === obj.id)
+    this.commentList.splice(index, 1, obj)
+  }
 
   build() {
     //组件内元素，后边的可以贴到前面的组件上
-    Stack({alignContent: Alignment.Bottom}){
+    Stack({ alignContent: Alignment.Bottom }) {
       //使用Scroll可以有滚动条，但是子组件只能有一个，且不能设置高度
       Scroll() {
         Column() {
@@ -95,7 +106,7 @@ struct ZhiHu {
           })
 
           ForEach(this.commentList, (obj: ReplyItem) => {
-            HmCommentItem({ item: obj })
+            HmCommentItem({ item: obj, changeLike: (obj) => this.changeLike(obj)})
           })
 
 
@@ -104,6 +115,7 @@ struct ZhiHu {
       .padding({
         bottom: 60
       })
+
       ReplyInput()
 
     }
@@ -116,7 +128,7 @@ struct ZhiHu {
 struct ReplyInput {
   build() {
     Row() {
-      TextInput({placeholder: '请回复～'})
+      TextInput({ placeholder: '请回复～' })
         .backgroundColor('#f4f6f5')
         .layoutWeight(1)
       Text('发布')
@@ -130,7 +142,7 @@ struct ReplyInput {
     .backgroundColor(Color.White)
     .border({
       color: '#f4f5f6',
-      width:{
+      width: {
         top: 3
       }
     })
@@ -185,6 +197,8 @@ struct HmNavBar {
 @Component
 struct HmCommentItem {
   @State item: Partial<ReplyItem> = {}
+  changeLike: (item: ReplyItem) => void = () => {
+  }
 
   build() {
     Row() {
@@ -210,14 +224,17 @@ struct HmCommentItem {
             Image('/assets/like-line.svg')
               .width(12)
               .aspectRatio(1)
-              .fillColor('#c3c4c5')
+              .fillColor(this.item.likeFlag ? Color.Red : '#c3c4c5')
               .margin({
                 right: 5
               })
-            Text(this.item.likeNum.toString())
+            Text(this.item.likeNum?.toString())
               .fontSize(12)
               .fontColor('#c3c4c5')
           }
+          .onClick(() => {
+            this.changeLike(this.item as ReplyItem)
+          })
         }
         .justifyContent(FlexAlign.SpaceBetween)
         .width('100%')
