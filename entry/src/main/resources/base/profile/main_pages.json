@@ -23,6 +23,7 @@
     "pages/04/LinkCase",
     "pages/04/ProvideCase",
     "pages/04/WatchCase",
-    "pages/04/ObjectLinkCase"
+    "pages/04/ObjectLinkCase",
+    "pages/04/ZhiHuCase"
   ]
 }
