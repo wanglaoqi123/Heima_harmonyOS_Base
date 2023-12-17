@@ -18,6 +18,7 @@
     "pages/homework/HomeWork02",
     "pages/03/BuilderCase",
     "pages/03/BuilderParamCase",
-    "pages/03/BuilderParamCard"
+    "pages/03/BuilderParamCard",
+    "pages/03/PropCase"
   ]
 }
