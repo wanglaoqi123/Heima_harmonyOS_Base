@@ -15,6 +15,7 @@
     "pages/02/ConditionCase",
     "pages/02/LoadingCase",
     "pages/02/ForEachCse",
-    "pages/homework/HomeWork02"
+    "pages/homework/HomeWork02",
+    "pages/03/BuilderCase"
   ]
 }

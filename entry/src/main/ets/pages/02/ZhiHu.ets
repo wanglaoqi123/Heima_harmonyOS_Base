@@ -122,7 +122,7 @@ struct ZhiHu {
       })
 
       ReplyInput({
-        add: item => {
+        add: (item: ReplyItem) => {
           this.addcomment(item)
         }
       })
