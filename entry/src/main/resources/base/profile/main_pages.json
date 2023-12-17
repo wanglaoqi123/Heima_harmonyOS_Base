@@ -21,6 +21,7 @@
     "pages/03/BuilderParamCard",
     "pages/03/PropCase",
     "pages/04/LinkCase",
-    "pages/04/ProvideCase"
+    "pages/04/ProvideCase",
+    "pages/04/WatchCase"
   ]
 }
