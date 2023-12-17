@@ -151,200 +151,12 @@ struct HomeWork02 {
   build() {
     Column() {
       //顶部
-      Row({ space: 10 }) {
-        Text('点菜')
-          .TextStyle1()
-        // .onClick(() => {
-        //   this.daohanglan = '0'
-        // })
-        Row() {
-          Text('评价')
-            .TextStyle1()
-          // .onClick(() => {
-          //   this.daohanglan = '1'
-          // })
-          Text('1796')
-            .fontSize(12)
-            .margin({
-              bottom: 0
-            })
-          // .onClick(() => {
-          //   this.daohanglan = '2'
-          // })
-        }
-
-        Text('商家')
-          .TextStyle1()
-        Row() {
-          Image($r('app.media.ic_public_input_search'))
-            .width('20')
-            .height('20')
-          TextInput({ placeholder: '请输入菜品名称' })
-            .layoutWeight(1)
-        }
-        .width(20)
-        .layoutWeight(1)
-      }
-      .padding({
-        right: 10,
-        left: 10
-      })
-      .width('100%')
-      .height(60)
-      .border({
-        width: {
-          bottom: 2
-        },
-        color: '#eeeeee'
-      })
+      Top()
 
       //中间
-      Row() {
-        Column({ space: 20 }) {
-          Text(this.caidan[0])
-            .onClick(() => {
-              this.foodtag = this.caidan[0]
-            })
-          Text(this.caidan[1])
-            .onClick(() => {
-              this.foodtag = this.caidan[1]
-            })
-          Text(this.caidan[2])
-            .onClick(() => {
-              this.foodtag = this.caidan[2]
-            })
-        }
-        .width('25%')
-
-        List() {
-          ForEach(this.allList, (item: AllKindsFoodList) => {
-            ListItem() {
-              if (item.name === '一人套餐') {
-                Row() {
-                  List() {
-                    ForEach(item.foods, (food: FoodList) => {
-                      ListItem() {
-                        Row() {
-                          Image(food.picture)
-                            .width(60)
-                            .height(60)
-                            .margin({
-                              left: 5,
-                              right: 5
-                            })
-
-                          Column() {
-                            Text(food.name)
-                              .fontSize(17)
-                            Text(`${food.description}` !== '' ? `${food.description}` : '')
-                              .fontSize(12)
-                              .fontColor('#757575')
-                            Row() {
-                              ForEach(food.food_tag_list, (tag: string) => {
-                                Text(tag)
-                                  .fontSize(8)
-                                  .fontColor('#ff8607')
-                                  .backgroundColor('#fff5e0')
-                              })
-                            }
-
-                            Text('月销售' + `${food.month_saled}` + ' ' + `${food.like_ratio_desc}`)
-                              .fontSize(12)
-                              .fontColor('#9c9c9c')
-                            Row() {
-                              Row() {
-                                Text('¥')
-                                  .fontColor('#ff7700')
-                                  .fontSize(10)
-                                Text(`${food.price}`)
-                                  .fontColor('#ff7700')
-                                  .fontSize(18)
-                              }
-                              Image($r('app.media.ic'))
-                                .width(15)
-                                .height(15)
-                                .backgroundColor('#ffc527')
-
-                            }
-                            .width('100%')
-                            .justifyContent(FlexAlign.SpaceBetween)
-                          }
-                          .padding({
-                            right: 10
-                          })
-                          .layoutWeight(1)
-                          .alignItems(HorizontalAlign.Start)
-                        }
-                        .alignItems(VerticalAlign.Top)
-                      }
-                    })
-                  }
-
-                }
-              }
-
-            }
-
-          })
-        }
-        .width('75%')
-      }
-      .layoutWeight(1)
-      .alignItems(VerticalAlign.Top)
+      Center({ caidan: this.caidan, foodtag: this.foodtag, allList: this.allList })
       //底部
-      Row() {
-        Row() {
-          Image($r('app.media.cart'))
-            .width(60)
-            .height(80)
-            .margin({
-              bottom: 20
-            })
-          Column({ space: 5 }) {
-            Row() {
-              Text('¥')
-                .fontColor(Color.White)
-                .fontSize(13)
-              Text('0.00')
-                .fontSize(20)
-                .fontColor(Color.White)
-            }
-
-            Text('预估另需配送费 ¥5')
-              .fontSize(10)
-              .fontColor('#545557')
-          }
-          .padding({
-            left: 10
-          })
-          .alignItems(HorizontalAlign.Start)
-        }
-        .borderRadius({
-          topLeft: 30,
-          bottomLeft: 30
-        })
-        .width(250)
-        .backgroundColor('#222426')
-
-
-        Text('去结算')
-          .textAlign(TextAlign.Center)
-          .backgroundColor('#ffc527')
-          .fontSize(20)
-          .width(80)
-          .height(60)
-          .borderRadius({
-            topRight: 30,
-            bottomRight: 30
-          })
-      }
-      .justifyContent(FlexAlign.SpaceBetween)
-      .margin({
-        bottom: 10,
-        right: 10,
-        left: 10
-      })
-      .height(60)
+      Bottom()
 
     }
     .width('100%')
@@ -354,6 +166,219 @@ struct HomeWork02 {
   }
 }
 
+@Component
+struct Top {
+  build() {
+    Row({ space: 10 }) {
+      Text('点菜')
+        .TextStyle1()
+      Row() {
+        Text('评价')
+          .TextStyle1()
+        Text('1796')
+          .fontSize(12)
+          .margin({
+            bottom: 0
+          })
+      }
+
+      Text('商家')
+        .TextStyle1()
+      Row() {
+        Image($r('app.media.ic_public_input_search'))
+          .width('20')
+          .height('20')
+        TextInput({ placeholder: '请输入菜品名称' })
+          .layoutWeight(1)
+      }
+      .width(20)
+      .layoutWeight(1)
+    }
+    .padding({
+      right: 10,
+      left: 10
+    })
+    .width('100%')
+    .height(60)
+    .border({
+      width: {
+        bottom: 2
+      },
+      color: '#eeeeee'
+    })
+  }
+}
+
+@Component
+struct Center {
+  allList: AllKindsFoodList[] = []
+  caidan: string[] = []
+  foodtag: string = ""
+
+  build() {
+    Row() {
+      Column({ space: 20 }) {
+        Text(this.caidan[0])
+          .onClick(() => {
+            this.foodtag = this.caidan[0]
+          })
+        Text(this.caidan[1])
+          .onClick(() => {
+            this.foodtag = this.caidan[1]
+          })
+        Text(this.caidan[2])
+          .onClick(() => {
+            this.foodtag = this.caidan[2]
+          })
+      }
+      .width('25%')
+
+      List() {
+        ForEach(this.allList, (item: AllKindsFoodList) => {
+          ListItem() {
+            if (item.name === '一人套餐') {
+              Row() {
+                List() {
+                  ForEach(item.foods, (food: FoodList) => {
+                    ListItem() {
+                      CenterItem({food: food})
+                    }
+                  })
+                }
+
+              }
+            }
+
+          }
+
+        })
+      }
+      .width('75%')
+    }
+    .layoutWeight(1)
+    .alignItems(VerticalAlign.Top)
+
+  }
+}
+
+@Component
+struct CenterItem {
+  food: Partial<FoodList> = {}
+  build() {
+    Row() {
+      Image(this.food.picture)
+        .width(60)
+        .height(60)
+        .margin({
+          left: 5,
+          right: 5
+        })
+
+      Column() {
+        Text(this.food.name)
+          .fontSize(17)
+        Text(`${this.food.description}` !== '' ? `${this.food.description}` : '')
+          .fontSize(12)
+          .fontColor('#757575')
+        Row() {
+          ForEach(this.food.food_tag_list, (tag: string) => {
+            Text(tag)
+              .fontSize(8)
+              .fontColor('#ff8607')
+              .backgroundColor('#fff5e0')
+          })
+        }
+
+        Text('月销售' + `${this.food.month_saled}` + ' ' + `${this.food.like_ratio_desc}`)
+          .fontSize(12)
+          .fontColor('#9c9c9c')
+        Row() {
+          Row() {
+            Text('¥')
+              .fontColor('#ff7700')
+              .fontSize(10)
+            Text(`${this.food.price}`)
+              .fontColor('#ff7700')
+              .fontSize(18)
+          }
+
+          Image($r('app.media.ic'))
+            .width(15)
+            .height(15)
+            .backgroundColor('#ffc527')
+
+        }
+        .width('100%')
+        .justifyContent(FlexAlign.SpaceBetween)
+      }
+      .padding({
+        right: 10
+      })
+      .layoutWeight(1)
+      .alignItems(HorizontalAlign.Start)
+    }
+    .alignItems(VerticalAlign.Top)
+  }
+}
+
+@Component
+struct Bottom {
+  build() {
+    Row() {
+      Row() {
+        Image($r('app.media.cart'))
+          .width(60)
+          .height(80)
+          .margin({
+            bottom: 20
+          })
+        Column({ space: 5 }) {
+          Row() {
+            Text('¥')
+              .fontColor(Color.White)
+              .fontSize(13)
+            Text('0.00')
+              .fontSize(20)
+              .fontColor(Color.White)
+          }
+
+          Text('预估另需配送费 ¥5')
+            .fontSize(10)
+            .fontColor('#545557')
+        }
+        .padding({
+          left: 10
+        })
+        .alignItems(HorizontalAlign.Start)
+      }
+      .borderRadius({
+        topLeft: 30,
+        bottomLeft: 30
+      })
+      .width(250)
+      .backgroundColor('#222426')
+
+
+      Text('去结算')
+        .textAlign(TextAlign.Center)
+        .backgroundColor('#ffc527')
+        .fontSize(20)
+        .width(80)
+        .height(60)
+        .borderRadius({
+          topRight: 30,
+          bottomRight: 30
+        })
+    }
+    .justifyContent(FlexAlign.SpaceBetween)
+    .margin({
+      bottom: 10,
+      right: 10,
+      left: 10
+    })
+    .height(60)
+  }
+}
 
 @Extend(Text) function TextStyle1() {
   .fontSize(15)
