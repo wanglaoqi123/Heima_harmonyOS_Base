@@ -24,11 +24,11 @@ function getCellContent(leftTitle: string, rightValue: string) {
 @Component
 struct BuilderCase {
   @Builder
-  getCellContent(leftTitle: string, rightValue: string) {
+  getCellContent($$: cellParams) {
     Row() {
       Row() {
-        Text(leftTitle)
-        Text(rightValue)
+        Text($$.leftTitle)
+        Text($$.rightValue)
       }
       .width('100%')
       .justifyContent(FlexAlign.SpaceBetween)
@@ -54,9 +54,9 @@ struct BuilderCase {
     Row() {
       Column({ space: 10 }) {
         Text(JSON.stringify(this.formData))
-        this.getCellContent("异常时间", this.formData.time)
-        this.getCellContent("异常类型", this.formData.type)
-        this.getCellContent("异常地点", this.formData.location)
+        this.getCellContent({leftTitle: "异常时间", rightValue: this.formData.time})
+        this.getCellContent({leftTitle: "异常类型", rightValue: this.formData.type})
+        this.getCellContent({leftTitle: "异常地点", rightValue: this.formData.location})
         Button('改变异常地点').onClick(() => {
           this.formData.location = '昌平'
         })
@@ -73,4 +73,9 @@ class CardClass {
   time: string = ""
   location: string = ""
   type: string = ""
+}
+
+class cellParams {
+  leftTitle: string = ""
+  rightValue: string = ""
 }
