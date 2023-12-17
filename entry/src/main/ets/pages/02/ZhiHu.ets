@@ -61,47 +61,86 @@ struct ZhiHu {
   ]
 
   build() {
-    //使用Scroll可以有滚动条，但是子组件只能有一个，且不能设置高度
-    Scroll() {
-      Column() {
-        HmNavBar()
-        HmCommentItem({
-          item: {
-            id: 0,
-            avatar: '/assets/test10.jpeg',
-            author: "老高",
-            content: "dgrehgsffghdghjhfkhjf",
-            time: "12-17",
-            area: "北京",
-            likeNum: 90,
-            likeFlag: false
+    //组件内元素，后边的可以贴到前面的组件上
+    Stack({alignContent: Alignment.Bottom}){
+      //使用Scroll可以有滚动条，但是子组件只能有一个，且不能设置高度
+      Scroll() {
+        Column() {
+          HmNavBar()
+          HmCommentItem({
+            item: {
+              id: 0,
+              avatar: '/assets/test10.jpeg',
+              author: "老高",
+              content: "dgrehgsffghdghjhfkhjf",
+              time: "12-17",
+              area: "北京",
+              likeNum: 90,
+              likeFlag: false
+            }
+          })
+          Divider()
+            .strokeWidth(6)
+            .color('#f6f6f6')
+            .width('100%')
+          Row() {
+            Text('回复7')
+              .fontWeight(FontWeight.Bold)
           }
-        })
-        Divider()
-          .strokeWidth(6)
-          .color('#f6f6f6')
           .width('100%')
-        Row() {
-          Text('回复7')
-            .fontWeight(FontWeight.Bold)
+          .height(40)
+          .justifyContent(FlexAlign.Start)
+          .padding({
+            left: 20
+          })
+
+          ForEach(this.commentList, (obj: ReplyItem) => {
+            HmCommentItem({ item: obj })
+          })
+
+
         }
-        .width('100%')
-        .height(40)
-        .justifyContent(FlexAlign.Start)
-        .padding({
-          left: 20
-        })
-
-        ForEach(this.commentList, (obj: ReplyItem) => {
-          HmCommentItem({ item: obj })
-        })
-
-
       }
+      .padding({
+        bottom: 60
+      })
+      ReplyInput()
+
     }
+
   }
 }
 
+//评论回复组件
+@Component
+struct ReplyInput {
+  build() {
+    Row() {
+      TextInput({placeholder: '请回复～'})
+        .backgroundColor('#f4f6f5')
+        .layoutWeight(1)
+      Text('发布')
+        .margin({
+          left: 10
+        })
+        .fontColor('#56b4f5')
+    }
+    .width('100%')
+    .height(50)
+    .backgroundColor(Color.White)
+    .border({
+      color: '#f4f5f6',
+      width:{
+        top: 3
+      }
+    })
+    .padding({
+      left: 10,
+      right: 10
+    })
+
+  }
+}
 
 @Component
 struct HmNavBar {
