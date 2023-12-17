@@ -59,7 +59,8 @@ struct ZhiHu {
       likeNum: 100
     }
   ]
-  changeLike (obj: ReplyItem) {
+
+  changeLike(obj: ReplyItem) {
     if (obj.likeFlag) {
       obj.likeFlag = false
       obj.likeNum--
@@ -69,6 +70,10 @@ struct ZhiHu {
     }
     const index = this.commentList.findIndex(item => item.id === obj.id)
     this.commentList.splice(index, 1, obj)
+  }
+
+  addcomment(item: ReplyItem) {
+    this.commentList.unshift(item)
   }
 
   build() {
@@ -106,7 +111,7 @@ struct ZhiHu {
           })
 
           ForEach(this.commentList, (obj: ReplyItem) => {
-            HmCommentItem({ item: obj, changeLike: (obj) => this.changeLike(obj)})
+            HmCommentItem({ item: obj, changeLike: (obj) => this.changeLike(obj) })
           })
 
 
@@ -116,7 +121,11 @@ struct ZhiHu {
         bottom: 60
       })
 
-      ReplyInput()
+      ReplyInput({
+        add: item => {
+          this.addcomment(item)
+        }
+      })
 
     }
 
@@ -126,16 +135,39 @@ struct ZhiHu {
 //评论回复组件
 @Component
 struct ReplyInput {
+  @State commentStr: string = ""
+  add: (item: ReplyItem) => void = () => {}
+
   build() {
     Row() {
-      TextInput({ placeholder: '请回复～' })
+      TextInput({ placeholder: '请回复～', text: this.commentStr })
         .backgroundColor('#f4f6f5')
         .layoutWeight(1)
+        .onChange((value) => {
+          this.commentStr = value
+        })
       Text('发布')
         .margin({
           left: 10
         })
         .fontColor('#56b4f5')
+        .onClick(() => {
+          if (this.commentStr !== "") {
+            let obj: ReplyItem = {
+              id: new Date().getMilliseconds(),
+              avatar: '/assets/a.png',
+              author: "坏坏的老高",
+              content: this.commentStr,
+              time: `${new Date().getMonth() + 1}-${new Date().getDate()}`,
+              area: "北京",
+              likeNum: 0,
+              likeFlag: false
+            }
+            this.add(obj)
+            this.commentStr = ""
+          }
+
+        })
     }
     .width('100%')
     .height(50)
