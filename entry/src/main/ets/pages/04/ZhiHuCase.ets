@@ -251,7 +251,7 @@ struct HmCommentItem {
             .fontSize(12)
 
           Row() {
-            Image('/assets/like-line.svg')
+            Image('/assets/like1.svg')
               .width(12)
               .aspectRatio(1)
               .fillColor(this.item.likeFlag ? Color.Red : '#c3c4c5')
