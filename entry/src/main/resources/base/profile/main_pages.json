@@ -24,9 +24,11 @@
     "pages/04/ProvideCase",
     "pages/04/WatchCase",
     "pages/04/ObjectLinkCase",
-    "pages/04/ZhiHuCase",
+    "pages/04/ObjectLinkZhiHuCase",
     "pages/04/MultiStateCase",
     "pages/04/LocalStorageCase",
-    "pages/04/LocalStorageCase2"
+    "pages/04/LocalStorageCase2",
+    "pages/04/AppStorageCase",
+    "pages/04/AppStorageCase02"
   ]
 }

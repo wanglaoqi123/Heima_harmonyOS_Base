@@ -35,9 +35,9 @@ struct LocalStorageCase {
               url: 'pages/04/LocalStorageCase2'
             })
           })
-        Button('更改').onClick(() => {
-          this.myUser.username = '老高好难'
-        })
+        // Button('更改').onClick(() => {
+        //   this.myUser.username = '老高好难'
+        // })
         Button('更改2').onClick(() => {
           this.myUser2.username = '老高好难'
         })
