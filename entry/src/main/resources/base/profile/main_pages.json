@@ -29,6 +29,8 @@
     "pages/04/LocalStorageCase",
     "pages/04/LocalStorageCase2",
     "pages/04/AppStorageCase",
-    "pages/04/AppStorageCase02"
+    "pages/04/AppStorageCase02",
+    "pages/04/HttpCase",
+    "pages/04/HttpCase02"
   ]
 }
