@@ -1,18 +1,39 @@
+import http from '@ohos.net.http'
+
 @Entry
 @Component
 struct MeiTuan {
   @State
   list: Category[] = []
+  @State
+  showCart: boolean = false
+
+  aboutToAppear() {
+    this.getMTData()
+  }
+
+  async getMTData() {
+    try {
+      const req = http.createHttp()
+      const res = await req.request("https://zhoushugang.gitee.io/fe2022/takeaway.json")
+      this.list = JSON.parse(res.result as string) as Category[]
+    } catch (error) {
+
+    }
+  }
 
   build() {
     //底部组件显示在最上面，使用stack堆叠
     Stack({ alignContent: Alignment.Bottom }) {
       //主内容组件
-      MTMain({list: $list})
+      MTMain({ list: $list })
       //购物车组件
-      MTCart()
+      if (this.showCart) {
+        MTCart()
+      }
+
       //底部组件
-      MTBottom()
+      MTBottom({ showCart: $showCart })
     }
   }
 }
@@ -35,8 +56,8 @@ struct MTMain {
       Row() {
         //左边是分类
         Column() {
-          ForEach(this.list, (item: string, index: number) => {
-            Text(item)
+          ForEach(this.list, (item: Category, index: number) => {
+            Text(item.name)
               .fontSize(14)
               .height(50)
               .width('100%')
@@ -53,15 +74,18 @@ struct MTMain {
 
         //右边是菜品条目
         //放置若干个菜品
-List() {
-  ForEach(this.list, (item:Category, index: number) => {
-    ListItem() {
-      // MTFoodItem()
-      Row()
-    }
-  })
-}
+        List() {
+          ForEach(this.list[this.selectIndex]?.foods || [], (item: FoodItem, index: number) => {
+            ListItem() {
+              MTFoodItem({ item })
+            }
+          })
+        }
+        .layoutWeight(1)
       }
+      .width('100%')
+      .justifyContent(FlexAlign.Start)
+      .alignItems(VerticalAlign.Top)
     }
     .width('100%')
     .height('100%')
@@ -73,16 +97,74 @@ List() {
 @Component
 struct MTFoodItem {
   item: Partial<FoodItem> = {}
+
   build() {
     Row() {
       Image(this.item.picture)
         .height(90)
         .width(90)
-      Column() {
-        Text()
-      }
+      Column({ space: 5 }) {
+        Text(this.item.name)
+          .fontWeight(600)
+          .maxLines(2)
+          .textOverflow({
+            overflow: TextOverflow.Ellipsis
+          })
+        Text(this.item.description)
+          .fontSize(12)
+          .fontColor('#333')
+          .maxLines(1)
+          .textOverflow({
+            overflow: TextOverflow.Ellipsis
+          })
+        Row({ space: 2 }) {
+          ForEach(this.item.food_tag_list, (item) => {
+            Text(item)
+              .fontSize(12)
+              .fontColor('#ff8000')
+              .backgroundColor('#fff5e2')
+              .borderRadius(2)
+              .padding({
+                top: 2,
+                bottom: 2,
+                left: 5,
+                right: 5
+              })
+          })
+        }
 
+        Text() {
+          Span(`月销售${this.item.month_saled}`)
+          Span(' ')
+          Span(this.item.like_ratio_desc)
+        }
+        .fontSize(12)
+        .fontColor('#999')
+
+        Row() {
+          Text() {
+            Span('¥')
+              .fontColor('#ff8000')
+              .fontSize(10)
+            Span(this.item.price.toFixed(2))
+              .fontColor('#ff8000')
+              .fontWeight(FontWeight.Bold)
+          }
+
+          MTAddCut({item: this.item})
+        }
+        .justifyContent(FlexAlign.SpaceBetween)
+        .width('100%')
+      }
+      .layoutWeight(1)
+      .alignItems(HorizontalAlign.Start)
+      .padding({
+        right: 10,
+        left: 10
+      })
     }
+    .padding(10)
+    .alignItems(VerticalAlign.Top)
   }
 }
 
@@ -144,33 +226,270 @@ struct MTNav {
   }
 }
 
+//购物车内部菜品组件
+@Component
+struct MTCartItm {
+  build() {
+    Row() {
+      Image("https://zqran.gitee.io/images/waimai/8078956697.jpg")
+        .width(60)
+        .aspectRatio(1)
+        .borderRadius(8)
+        .margin({
+          right: 10
+        })
+      Column() {
+        Text('大饼卷馒头就这米饭吃')
+          .fontSize(14)
+          .textOverflow({ overflow: TextOverflow.Ellipsis })
+          .maxLines(2)
+        Row() {
+          Text() {
+            Span('¥')
+              .fontSize(12)
+              .fontColor('#ff8000')
+            Span('34.33')
+              .fontSize(18)
+              .fontColor('#ff8000')
+              .fontWeight(FontWeight.Bold)
+          }
+          //加菜减菜按钮
+          MTAddCut()
+        }
+        .justifyContent(FlexAlign.SpaceBetween)
+        .width('100%')
+      }
+      .alignItems(HorizontalAlign.Start)
+      .justifyContent(FlexAlign.Start)
+      .height(60)
+      .layoutWeight(1)
+      .padding({
+        right: 20
+      })
+
+    }
+    .padding({
+      left: 20
+    })
+  }
+}
+
 //购物车组件
 @Component
 struct MTCart {
   build() {
-    Row() {
+    Column() {
+      //顶部标题
+      Row() {
+        Text('购物车')
+          .fontSize(12)
+        Text('清空购物车')
+          .fontSize(12)
+          .fontColor('#999')
+      }
+      .width('100%')
+      .height(40)
+      .justifyContent(FlexAlign.SpaceBetween)
+      .border({
+        width: {
+          bottom: 0.5
+        },
+        color: '#f5f5f5'
+      })
+      .padding({
+        right: 15,
+        left: 15
+      })
+
+      //下部购物车菜品组件
+      List({ space: 30 }) {
+        ListItem() {
+          MTCartItm()
+        }
+
+        ListItem() {
+          MTCartItm()
+        }
+
+        ListItem() {
+          MTCartItm()
+        }
+
+        ListItem() {
+          MTCartItm()
+        }
+      }
+      .padding({
+        bottom: 70
+      })
 
     }
+    .justifyContent(FlexAlign.Start)
     .width("100%")
-    .height(100)
-    .backgroundColor(Color.Yellow)
+    .height('50%')
+    .backgroundColor(Color.White)
   }
 }
 
-//底部组件
+//底部购物车和结算组件
 @Component
 struct MTBottom {
+  @Link
+  showCart: boolean
+
   build() {
     Row() {
+      Row() {
+        //徽标组件
+        Badge({
+          value: '1',
+          position: BadgePosition.Right,
+          style: {
+            badgeSize: 18
+          }
+        }) {
+          Image('/pages/05/waimai.png')
+            .width(47)
+            .height(69)
+            .position({
+              y: -15
+            })
+        }
+        .width(50)
+        .height(50)
+        .margin({
+          left: 25,
+          right: 10
+        })
 
+        //右侧价格和配送费
+        Column() {
+          Text() {
+            Span('¥')
+              .fontSize(12)
+              .fontColor('#fff')
+            Span('0.00')
+              .fontSize(22)
+              .fontColor('#fff')
+          }
+
+          Text('预估另需配送费¥5')
+            .fontSize(12)
+            .fontColor('#999')
+        }
+        .layoutWeight(1)
+        .alignItems(HorizontalAlign.Start)
+
+        //右侧结算按钮
+        Text('去结算')
+          .backgroundColor('#f8c74e')
+          .borderRadius({
+            topRight: 30,
+            bottomRight: 30
+          })
+          .padding({
+            left: 15,
+            right: 15
+          })
+          .height(60)
+      }
+      .width('100%')
+      .height(60)
+      .backgroundColor('#222426')
+      .borderRadius(30)
+      .onClick(() => {
+        this.showCart = !this.showCart
+      })
     }
     .width('100%')
-    .height(40)
-    .backgroundColor(Color.Black)
+    .padding({
+      left: 20,
+      right: 20,
+      bottom: 20
+    })
   }
 }
 
-export class  FoodItem {
+//加减菜按钮
+@Component
+struct MTAddCut {
+  item: Partial<FoodItem>  = {}
+
+  build() {
+    Row({ space: 8 }) {
+      Row() {
+        Image($r('app.media.ic_screenshot_line'))
+          .width(10)
+          .aspectRatio(1)
+      }
+      .width(16)
+      .aspectRatio(1)
+      .backgroundColor('#fff')
+      .borderRadius(4)
+      .justifyContent(FlexAlign.Center)
+      .border({
+        width: 0.5,
+        color: '#f8c74e'
+      })
+
+      Text('0')
+        .fontSize(14)
+      Row() {
+        Image($r('app.media.ic_public_add_filled'))
+          .width(10)
+          .aspectRatio(1)
+      }
+      .width(16)
+      .aspectRatio(1)
+      .backgroundColor('#fff')
+      .borderRadius(4)
+      .justifyContent(FlexAlign.Center)
+      .border({
+        width: 0.5,
+        color: '#f8c74e'
+      })
+      .onClick(() => {
+        //加菜减菜
+        addCutCart("add", this.item as FoodItem)
+      })
+    }
+  }
+}
+
+//持久化数据
+PersistentStorage.PersistProp<string>("user_cart", "[]")
+
+//加菜减菜方法
+const addCutCart = (type: 'add' | 'cut', item: FoodItem) => {
+  const list = getCarts()
+  const f = list.find(f => f.id === item.id)
+  if (type === 'add') {
+    if (f) {
+      f.count++
+    } else {
+      item.count = 1
+      list.unshift(item)
+    }
+  } else {
+    if (f) {
+      f.count--
+      if (f.count === 0) {
+        const index = list.findIndex(f => f.id === item.id)
+        list.splice(index, 1)
+      }
+    }
+  }
+  AppStorage.Set<string>("user_cart", JSON.stringify(list))
+  AlertDialog.show({
+    message: AppStorage.Get<string>("user_cart")
+  })
+}
+
+const getCarts = () => {
+  return JSON.parse(AppStorage.Get<string>("user_cart") || '[]') as FoodItem[]
+}
+
+export class FoodItem {
   id: number = 0
   name: string = ""
   like_ratio_desc: string = ""
