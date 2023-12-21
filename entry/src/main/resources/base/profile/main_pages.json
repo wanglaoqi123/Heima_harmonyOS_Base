@@ -32,6 +32,8 @@
     "pages/04/AppStorageCase02",
     "pages/04/HttpCase",
     "pages/04/HttpCase02",
-    "pages/05/MeiTuan"
+    "pages/05/MeiTuan",
+    "pages/06/HmList",
+    "pages/06/HmDetail"
   ]
 }
