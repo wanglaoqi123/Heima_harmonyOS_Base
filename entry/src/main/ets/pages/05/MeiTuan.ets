@@ -8,8 +8,19 @@ struct MeiTuan {
   @State
   showCart: boolean = false
 
+  @StorageLink("user_cart")
+  @Watch("updateCartJSON") // Watch必须放在其他修饰符下面，第一次不生效
+  cartJSON: string = "[]"
+  @Provide
+  cartList: FoodItem[] = []
+
   aboutToAppear() {
     this.getMTData()
+    this.updateCartJSON()
+  }
+
+  updateCartJSON() {
+    this.cartList = getCarts()
   }
 
   async getMTData() {
@@ -151,7 +162,7 @@ struct MTFoodItem {
               .fontWeight(FontWeight.Bold)
           }
 
-          MTAddCut({item: this.item})
+          MTAddCut({ item: this.item })
         }
         .justifyContent(FlexAlign.SpaceBetween)
         .width('100%')
@@ -229,9 +240,11 @@ struct MTNav {
 //购物车内部菜品组件
 @Component
 struct MTCartItm {
+  @State
+  item: Partial<FoodItem> = {}
   build() {
     Row() {
-      Image("https://zqran.gitee.io/images/waimai/8078956697.jpg")
+      Image(this.item.picture)
         .width(60)
         .aspectRatio(1)
         .borderRadius(8)
@@ -239,7 +252,7 @@ struct MTCartItm {
           right: 10
         })
       Column() {
-        Text('大饼卷馒头就这米饭吃')
+        Text(this.item.name)
           .fontSize(14)
           .textOverflow({ overflow: TextOverflow.Ellipsis })
           .maxLines(2)
@@ -248,13 +261,13 @@ struct MTCartItm {
             Span('¥')
               .fontSize(12)
               .fontColor('#ff8000')
-            Span('34.33')
+            Span(this.item.price.toFixed(2)) // 返回两位小数的字符串
               .fontSize(18)
               .fontColor('#ff8000')
               .fontWeight(FontWeight.Bold)
           }
           //加菜减菜按钮
-          MTAddCut()
+          MTAddCut({item: this.item})
         }
         .justifyContent(FlexAlign.SpaceBetween)
         .width('100%')
@@ -277,6 +290,8 @@ struct MTCartItm {
 //购物车组件
 @Component
 struct MTCart {
+  @Consume
+  cartList: FoodItem[]
   build() {
     Column() {
       //顶部标题
@@ -286,6 +301,9 @@ struct MTCart {
         Text('清空购物车')
           .fontSize(12)
           .fontColor('#999')
+          .onClick(() => {
+            clearCart()
+          })
       }
       .width('100%')
       .height(40)
@@ -303,21 +321,11 @@ struct MTCart {
 
       //下部购物车菜品组件
       List({ space: 30 }) {
-        ListItem() {
-          MTCartItm()
-        }
-
-        ListItem() {
-          MTCartItm()
-        }
-
-        ListItem() {
-          MTCartItm()
-        }
-
-        ListItem() {
-          MTCartItm()
-        }
+        ForEach(this.cartList, (item: FoodItem) => {
+          ListItem() {
+            MTCartItm({item})
+          }
+        })
       }
       .padding({
         bottom: 70
@@ -336,13 +344,21 @@ struct MTCart {
 struct MTBottom {
   @Link
   showCart: boolean
+  @Consume
+  cartList: FoodItem[]
+  getAllCount() {
+    return this.cartList.reduce((preValue: number, item: FoodItem) => preValue + item.count, 0)
+  }
+ getAllPrice () {
+   return this.cartList.reduce((preValue: number, item: FoodItem) => preValue + item.count * item.price, 0)
+ }
 
   build() {
     Row() {
       Row() {
         //徽标组件
         Badge({
-          value: '1',
+          value: this.getAllCount().toString(),
           position: BadgePosition.Right,
           style: {
             badgeSize: 18
@@ -368,7 +384,7 @@ struct MTBottom {
             Span('¥')
               .fontSize(12)
               .fontColor('#fff')
-            Span('0.00')
+            Span(this.getAllPrice().toFixed(2))
               .fontSize(22)
               .fontColor('#fff')
           }
@@ -413,10 +429,17 @@ struct MTBottom {
 //加减菜按钮
 @Component
 struct MTAddCut {
-  item: Partial<FoodItem>  = {}
+  @Consume
+  cartList: FoodItem[]
+  item: Partial<FoodItem> = {}
+  //获取要显示的数量
+  getContent(): number {
+    return this.cartList.find(obj => obj.id === this.item.id)?.count || 0
+  }
 
   build() {
     Row({ space: 8 }) {
+      //减号
       Row() {
         Image($r('app.media.ic_screenshot_line'))
           .width(10)
@@ -431,9 +454,14 @@ struct MTAddCut {
         width: 0.5,
         color: '#f8c74e'
       })
-
-      Text('0')
+      .onClick(() => {
+        //减菜
+        addCutCart("cut", this.item as FoodItem)
+      })
+      //当前菜品的数量
+      Text(this.getContent().toString())
         .fontSize(14)
+      //加号
       Row() {
         Image($r('app.media.ic_public_add_filled'))
           .width(10)
@@ -449,7 +477,7 @@ struct MTAddCut {
         color: '#f8c74e'
       })
       .onClick(() => {
-        //加菜减菜
+        //加菜
         addCutCart("add", this.item as FoodItem)
       })
     }
@@ -471,7 +499,7 @@ const addCutCart = (type: 'add' | 'cut', item: FoodItem) => {
       list.unshift(item)
     }
   } else {
-    if (f) {
+    if (f && f.count > 0) {
       f.count--
       if (f.count === 0) {
         const index = list.findIndex(f => f.id === item.id)
@@ -480,13 +508,14 @@ const addCutCart = (type: 'add' | 'cut', item: FoodItem) => {
     }
   }
   AppStorage.Set<string>("user_cart", JSON.stringify(list))
-  AlertDialog.show({
-    message: AppStorage.Get<string>("user_cart")
-  })
+
 }
 
 const getCarts = () => {
   return JSON.parse(AppStorage.Get<string>("user_cart") || '[]') as FoodItem[]
+}
+const clearCart = () => {
+  AppStorage.Set<string>("user_cart", "[]")
 }
 
 export class FoodItem {
