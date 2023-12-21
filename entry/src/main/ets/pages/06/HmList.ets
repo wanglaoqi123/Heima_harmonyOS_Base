@@ -11,6 +11,7 @@ struct HmList {
     } as ListItemInfo
   })
 
+  //只要展示这个页面就执行
   onPageShow() {
     const param = router.getParams() as BackParams
     const num = AppStorage.Get<number>("myId")

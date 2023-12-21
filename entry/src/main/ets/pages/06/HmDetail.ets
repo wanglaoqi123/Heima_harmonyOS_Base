@@ -4,6 +4,7 @@ import router from '@ohos.router'
 struct HmDetail {
   @State
   currentId: number = 0
+  //aboutToAppear只在初始化页面的时候加载一次
   aboutToAppear() {
     const params = router.getParams() as RouterParamClass
     if (params.id) {
@@ -40,7 +41,7 @@ struct HmDetail {
         //     })
         //   })
 
-        //单例模式  同一个页面栈中只有一个，跳转时候如果目标页已经存在页面栈中，则将其移动到栈顶的位置
+        //单例模式 即如果目标页的url在页面栈中已经存在同url页面，则离栈顶最近的同url页面会被移动到栈顶，并重新加载；如果目标页的url在页面栈中不存在同url页面，则按照标准模式跳转。
         Button('单例模式跳回列表页')
           .onClick(() => {
             router.pushUrl({
