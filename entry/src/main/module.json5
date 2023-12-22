@@ -11,10 +11,10 @@
     "deliveryWithInstall": true,
     "installationFree": false,
     "pages": "$profile:main_pages",
-    "requestPermissions": [{
-      "name": "ohos.permission.INTERNET"
-    },
-
+    "requestPermissions": [
+      {
+        "name": "ohos.permission.INTERNET"
+      },
     ],
     "abilities": [
       {
@@ -36,6 +36,15 @@
             ]
           }
         ]
+      },
+      {
+        "name": "PayAbility",
+        "srcEntry": "./ets/payability/PayAbility.ts",
+        "description": "$string:PayAbility_desc",
+        "icon": "$media:icon",
+        "label": "$string:PayAbility_label",
+        "startWindowIcon": "$media:icon",
+        "startWindowBackground": "$color:start_window_background"
       }
     ]
   }

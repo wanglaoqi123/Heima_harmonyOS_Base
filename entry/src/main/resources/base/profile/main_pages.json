@@ -34,6 +34,9 @@
     "pages/04/HttpCase02",
     "pages/05/MeiTuan",
     "pages/06/HmList",
-    "pages/06/HmDetail"
+    "pages/06/HmDetail",
+    "pages/06/LiveCase",
+    "pages/06/Main/MainPage",
+    "pages/06/Pay/PayIndex"
   ]
 }
