@@ -1,0 +1,16 @@
+{
+  "string": [
+    {
+      "name": "module_desc",
+      "value": "module description"
+    },
+    {
+      "name": "HeiMaPayAbility_desc",
+      "value": "description"
+    },
+    {
+      "name": "HeiMaPayAbility_label",
+      "value": "label"
+    }
+  ]
+}

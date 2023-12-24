@@ -22,6 +22,18 @@
           ]
         }
       ]
+    },
+    {
+      "name": "HeiMaPay",
+      "srcPath": "./HeiMaPay",
+      "targets": [
+        {
+          "name": "default",
+          "applyToProducts": [
+            "default"
+          ]
+        }
+      ]
     }
   ]
 }
