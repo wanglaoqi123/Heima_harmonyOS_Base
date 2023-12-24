@@ -39,6 +39,7 @@
     "pages/06/Main/MainPage",
     "pages/06/Pay/PayIndex",
     "pages/07/AnimotionCase",
-    "pages/07/AnimateToCase"
+    "pages/07/AnimateToCase",
+    "pages/07/VideoCase"
   ]
 }
