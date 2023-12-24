@@ -7,7 +7,6 @@ struct MeiTuan {
   list: Category[] = []
   @State
   showCart: boolean = false
-
   @StorageLink("user_cart")
   @Watch("updateCartJSON") // Watch必须放在其他修饰符下面，第一次不生效
   cartJSON: string = "[]"
@@ -41,6 +40,18 @@ struct MeiTuan {
       //购物车组件
       if (this.showCart) {
         MTCart()
+          .transition({
+            type: TransitionType.Insert,
+            translate: {
+              y: '100%'
+            }
+          })
+          .transition({
+            type: TransitionType.Delete,
+            translate: {
+              y: '100%'
+            }
+          })
       }
 
       //底部组件
@@ -242,6 +253,7 @@ struct MTNav {
 struct MTCartItm {
   @State
   item: Partial<FoodItem> = {}
+
   build() {
     Row() {
       Image(this.item.picture)
@@ -267,7 +279,7 @@ struct MTCartItm {
               .fontWeight(FontWeight.Bold)
           }
           //加菜减菜按钮
-          MTAddCut({item: this.item})
+          MTAddCut({ item: this.item })
         }
         .justifyContent(FlexAlign.SpaceBetween)
         .width('100%')
@@ -292,6 +304,7 @@ struct MTCartItm {
 struct MTCart {
   @Consume
   cartList: FoodItem[]
+
   build() {
     Column() {
       //顶部标题
@@ -323,7 +336,7 @@ struct MTCart {
       List({ space: 30 }) {
         ForEach(this.cartList, (item: FoodItem) => {
           ListItem() {
-            MTCartItm({item})
+            MTCartItm({ item })
           }
         })
       }
@@ -346,12 +359,14 @@ struct MTBottom {
   showCart: boolean
   @Consume
   cartList: FoodItem[]
+
   getAllCount() {
     return this.cartList.reduce((preValue: number, item: FoodItem) => preValue + item.count, 0)
   }
- getAllPrice () {
-   return this.cartList.reduce((preValue: number, item: FoodItem) => preValue + item.count * item.price, 0)
- }
+
+  getAllPrice() {
+    return this.cartList.reduce((preValue: number, item: FoodItem) => preValue + item.count * item.price, 0)
+  }
 
   build() {
     Row() {
@@ -414,7 +429,9 @@ struct MTBottom {
       .backgroundColor('#222426')
       .borderRadius(30)
       .onClick(() => {
-        this.showCart = !this.showCart
+        animateTo({ duration: 500 }, () => {
+          this.showCart = !this.showCart
+        })
       })
     }
     .width('100%')
