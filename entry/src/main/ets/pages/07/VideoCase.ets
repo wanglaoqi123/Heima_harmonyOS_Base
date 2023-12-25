@@ -63,7 +63,7 @@ struct VideoCase {
 
       TabContent() {
         Video({
-          src: 'https://m701.music.126.net/20231222212224/f33140d889f25347df0d6757a685748c/jdyyaac/030e/0e0e/0e5a/4d783dbca09d7c4c7a39903bbfd0ffe8.m4a'
+          src: 'https://m701.music.126.net/20231225115501/b83c5f351667de46bc804d997685ccee/jdyyaac/obj/w5rDlsOJwrLDjj7CmsOj/31648546323/a2c3/d54f/fe45/000623360b4fd047cdd40a2b356979b5.m4a'
         })
           .width('100%')
           .aspectRatio(1.2)
