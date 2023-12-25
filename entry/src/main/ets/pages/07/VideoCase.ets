@@ -1,27 +1,74 @@
 @Entry
 @Component
 struct VideoCase {
-  @State message: string = 'Hello World'
+  controller: VideoController = new VideoController()
+  @State
+  speed: number = 0
 
   build() {
     Tabs() {
       TabContent() {
-        Video({
-          src: 'https://vd3.bdstatic.com/mda-pmj5ajqd7p4b6pgb/576p/h264/1703044058699262355/mda-pmj5ajqd7p4b6pgb.mp4?auth_key=1703138418-0-0-618ea72b33be241c96c6cff86c06e080&bcevod_channel=searchbox_feed&cr=1&cd=0&pd=1&pt=4&logid=0018430194&vid=9762003448174112444&abtest=all'
-        })
-          .width(300)
-          .aspectRatio(1.3)
+        Column({ space: 20 }) {
+          Video({
+            currentProgressRate: this.speed,
+            controller: this.controller,
+            src: 'https://vd3.bdstatic.com/mda-pmj5ajqd7p4b6pgb/576p/h264/1703044058699262355/mda-pmj5ajqd7p4b6pgb.mp4?auth_key=1703138418-0-0-618ea72b33be241c96c6cff86c06e080&bcevod_channel=searchbox_feed&cr=1&cd=0&pd=1&pt=4&logid=0018430194&vid=9762003448174112444&abtest=all'
+          })
+            .width('100%')
+            .aspectRatio(1.2)
+            .controls(false)
+          Row() {
+            Slider({
+              value: this.speed,
+              min: 0.75,
+              max: 2,
+              step: 0.25
+            }).showSteps(true)
+              .onChange(value => {
+                this.speed = value
+              })
+          }
+          Text("当前速度： "+this.speed)
+          Row({space: 20}) {
+            Button('播放')
+              .onClick(() => {
+                this.controller.start()
+              })
+            Button('暂停')
+              .onClick(() => {
+                this.controller.pause()
+              })
+            Button('快进到一分钟')
+              .onClick(() => {
+                this.controller.setCurrentTime(60)
+              })
+            Button('停止')
+              .onClick(() => {
+                this.controller.stop()
+              })
+          }
+        }
+
       }
       .tabBar('在线视频')
+
       TabContent() {
         Video({
-          // src: $rawfile('travel.mp4')
-          src: 'https://vd3.bdstatic.com/mda-pmj5ajqd7p4b6pgb/576p/h264/1703044058699262355/mda-pmj5ajqd7p4b6pgb.mp4?auth_key=1703138418-0-0-618ea72b33be241c96c6cff86c06e080&bcevod_channel=searchbox_feed&cr=1&cd=0&pd=1&pt=4&logid=0018430194&vid=9762003448174112444&abtest=all'
+          src: $rawfile('SNtBNF6N.mp4')
         })
-          .width(300)
-          .aspectRatio(1.3)
+          .width('100%')
+          .aspectRatio(1.2)
       }
       .tabBar('本地视频')
+
+      TabContent() {
+        Video({
+          src: 'https://m701.music.126.net/20231222212224/f33140d889f25347df0d6757a685748c/jdyyaac/030e/0e0e/0e5a/4d783dbca09d7c4c7a39903bbfd0ffe8.m4a'
+        })
+          .width('100%')
+          .aspectRatio(1.2)
+      }
+      .tabBar("音频")
     }
     .animationDuration(500)
   }
