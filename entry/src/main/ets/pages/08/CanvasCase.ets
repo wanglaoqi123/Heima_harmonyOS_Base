@@ -3,7 +3,7 @@
 struct CanvasCase {
 
   //显示声明 画笔对象
-  context: CanvasRenderingContext2D = new CanvasRenderingContext2D()
+  context: CanvasRenderingContext2D = new CanvasRenderingContext2D(new RenderingContextSettings(true)) //抗锯齿处理
 
   build() {
     Row() {

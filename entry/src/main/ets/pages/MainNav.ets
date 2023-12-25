@@ -15,7 +15,12 @@ struct MainNav {
     {
       title: "抖音案例",
       url: "pages/07/DouYin/DouYin"
-    }]
+    },
+    {
+      title: "你画我猜案例",
+      url: "pages/08/GuessCanvas"
+    }
+  ]
 
   build() {
     List({space: 20}) {

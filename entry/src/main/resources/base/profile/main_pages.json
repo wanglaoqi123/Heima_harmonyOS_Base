@@ -43,6 +43,7 @@
     "pages/07/VideoCase",
     "pages/07/DouYin/DouYin",
     "pages/MainNav",
-    "pages/08/CanvasCase"
+    "pages/08/CanvasCase",
+    "pages/08/GuessCanvas"
   ]
 }
