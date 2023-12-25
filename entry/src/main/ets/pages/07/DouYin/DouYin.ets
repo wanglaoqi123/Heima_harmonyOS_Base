@@ -1,15 +1,18 @@
 @Entry
 @Component
 struct DouYin {
+  @State
   videoList: VideoItem[] = addData
+  @State
+  currentIndex: number = 0
   //swiper 可以上下左右滑动
   build() {
     Swiper() {
       // PlayVideo()
       // PlayVideo()
       // PlayVideo()
-      ForEach(this.videoList, (item) => {
-        PlayVideo({item})
+      ForEach(this.videoList, (item: VideoItem, index: number) => {
+        PlayVideo({item, index, currentIndex: this.currentIndex})
       })
     }
     .width('100%')
@@ -19,29 +22,51 @@ struct DouYin {
     .vertical(true) //垂直滑动
     .indicator(false) //导航指示器
     .duration(200)
+    .onChange((index) => {
+      this.currentIndex = index
+    })
   }
 }
 
 @Component
 struct PlayVideo {
+  index: number = 0 //我是第几个
   item: Partial<VideoItem> = {}
+  controller: VideoController = new VideoController()
   @State
   playing: boolean = false
-  controller: VideoController = new VideoController()
+  @Prop
+  currentIndex: number //轮到第几个播放了
   build() {
     Stack({ alignContent: Alignment.Bottom }) {
       //视频区
       Stack() {
-        Video({
-          src: this.item.videoUrl
-        })
-          .width('100%')
-          .aspectRatio(1.4)
-          .controls(false)
-        .onClick(() => {
-          this.controller.pause()
-          this.playing = false
-        })
+        //只有轮到的时候，才会出现video
+        if (this.currentIndex === this.index) {
+          Video({
+            src: this.item.videoUrl,
+            controller: this.controller
+          })
+            .width('100%')
+            .aspectRatio(1.4)
+            .controls(false)
+            .onClick(() => {
+              this.controller.pause()
+              this.playing = false
+            })
+            .onPrepared(() => { //视频缓冲完毕了
+              //准备完成
+              this.controller.start()
+              this.playing = true
+            })
+        }
+        //没轮到播放的时候，显示首帧图
+        if (!this.playing) {
+          Image(this.item.imgUrl)
+            .width('100%')
+            .aspectRatio(1.4)
+        }
+
         if (!this.playing) {
           Row() {
             Image($r('app.media.ic_public_play'))
