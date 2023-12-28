@@ -19,6 +19,10 @@ struct MainNav {
     {
       title: "你画我猜案例",
       url: "pages/08/GuessCanvas"
+    },
+    {
+      title: "聊天机器人案例",
+      url: "pages/08/WeChat"
     }
   ]
 

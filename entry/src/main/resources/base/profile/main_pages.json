@@ -44,6 +44,7 @@
     "pages/07/DouYin/DouYin",
     "pages/MainNav",
     "pages/08/CanvasCase",
-    "pages/08/GuessCanvas"
+    "pages/08/GuessCanvas",
+    "pages/08/WeChat"
   ]
 }
