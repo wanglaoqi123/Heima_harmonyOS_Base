@@ -30,7 +30,7 @@ struct MainNav {
     },
     {
       title: "华为时钟",
-      url: "pages/08/WeChat"
+      url: "pages/09/HWClock"
     }
   ]
 
