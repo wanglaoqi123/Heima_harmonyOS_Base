@@ -23,6 +23,14 @@ struct MainNav {
     {
       title: "聊天机器人案例",
       url: "pages/08/WeChat"
+    },
+    {
+      title: "发布闹铃",
+      url: "pages/09/ClockCase"
+    },
+    {
+      title: "华为时钟",
+      url: "pages/08/WeChat"
     }
   ]
 

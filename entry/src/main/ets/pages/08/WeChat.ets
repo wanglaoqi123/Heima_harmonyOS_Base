@@ -64,7 +64,7 @@ struct WeChat {
             additionalText: "博弟的消息"
           }
         },
-        wantAgent: want
+        wantAgent: want  //为通知添加行为
       }
       notificationManager.publish(req)
       //再加一条聊天记录

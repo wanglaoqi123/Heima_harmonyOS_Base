@@ -45,6 +45,7 @@
     "pages/MainNav",
     "pages/08/CanvasCase",
     "pages/08/GuessCanvas",
-    "pages/08/WeChat"
+    "pages/08/WeChat",
+    "pages/09/ClockCase"
   ]
 }
