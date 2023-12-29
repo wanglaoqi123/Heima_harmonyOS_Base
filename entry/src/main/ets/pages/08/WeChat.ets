@@ -3,6 +3,10 @@ import util from '@ohos.util'
 import promptAction from '@ohos.promptAction'
 import http from '@ohos.net.http'
 import { WindowMode } from '@ohos.UiTest'
+import notificationManager from '@ohos.notificationManager'
+import notification from '@ohos.notification'
+import wantAgent, { WantAgent } from '@ohos.app.ability.wantAgent'
+import Want from '@ohos.app.ability.Want'
 
 @Entry
 @Component
@@ -35,6 +39,34 @@ struct WeChat {
     //拿到机器人回复的结果
     const result = JSON.parse(res.result as string) as ResultClass
     if (result.result === 0) {
+      //需要生命wantAgent对象
+      let want = await wantAgent.getWantAgent({
+        wants: [{
+          bundleName: 'com.itheima.heima_harmony',
+          abilityName: 'HeiMaPayAbility',
+          moduleName: 'HeiMaPay',
+          parameters: {
+            order_id: Date.now()
+          }
+        }],
+        //点击通知，会启动Ability
+        operationType: wantAgent.OperationType.START_ABILITY,
+        requestCode: 0
+      })
+      //给手机应用发送一条通知
+      let req: notificationManager.NotificationRequest = {
+        id: Date.now(),
+        content: {
+          contentType: notificationManager.ContentType.NOTIFICATION_CONTENT_BASIC_TEXT,
+          normal: {
+            title: "你的老婆给你发送一条新消息",
+            text: result.content,
+            additionalText: "博弟的消息"
+          }
+        },
+        wantAgent: want
+      }
+      notificationManager.publish(req)
       //再加一条聊天记录
       let wifeMessage: MessageItem = {
         avatar: $r("app.media.bo"),
@@ -76,7 +108,7 @@ struct WeChat {
             ListItem() {
               MessageChat({ item, delMesssage: (id: string) => {
                 const index = this.messList.findIndex(item => item.id === id)
-                this.messList.splice(index,1)
+                this.messList.splice(index, 1)
               } })
             }
           })
@@ -130,10 +162,11 @@ struct MessageChat {
   item: Partial<MessageItem> = {}
   @State
   showDel: boolean = false
-  delMesssage: (id: string) => void = () => {}
+  delMesssage: (id: string) => void = () => {
+  }
 
   @Builder
-  getDelContent () {
+  getDelContent() {
     Button('删除')
       .onClick(() => {
         this.delMesssage(this.item.id)
@@ -160,10 +193,10 @@ struct MessageChat {
             .onAction(() => {
               this.showDel = true
             }))
-          // .bindPopup(this.showDel, {
-          //   builder: this.getDelContent(),
-          //   placement: Placement.Top
-          // })
+        // .bindPopup(this.showDel, {
+        //   builder: this.getDelContent(),
+        //   placement: Placement.Top
+        // })
         if (this.showDel) {
           this.getDelContent()
         }
