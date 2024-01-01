@@ -38,12 +38,30 @@ struct CanvasClock {
   canvasSize: number = 252
   //表盘图片
   panImage: ImageBitmap = new ImageBitmap('/images/ic_clock_pan.png')
+  //时针
+  hourImage: ImageBitmap = new ImageBitmap('/images/ic_hour_pointer.png')
+  //分针
+  minImage: ImageBitmap = new ImageBitmap('/images/ic_minute_pointer.png')
+  //秒针
+  secondImage: ImageBitmap = new ImageBitmap('/images/ic_second_pointer.png')
   //画笔
   context: CanvasRenderingContext2D = new CanvasRenderingContext2D(new RenderingContextSettings(true))
+  //画表盘
   drawClock() {
     this.context.drawImage(this.panImage,0,0,this.canvasSize,this.canvasSize)
+    this.drawPointer(this.hourImage)
+    this.drawPointer(this.minImage)
+    this.drawPointer(this.secondImage)
+
   }
+  //画指针
+  drawPointer(image: ImageBitmap) {
+    //如何让我们的指针指向12点
+    this.context.drawImage(image,this.canvasSize / 2 - 4, 0, 8, this.canvasSize)
+  }
+
   build() {
+    //画布
     Canvas(this.context)
       .width(252)
       .aspectRatio(1)
