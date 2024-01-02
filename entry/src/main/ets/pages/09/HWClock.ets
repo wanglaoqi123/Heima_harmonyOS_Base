@@ -1,8 +1,16 @@
 import router from '@ohos.router'
+import { ClockItemClass, MyClockStore } from './ClockStore'
 @Entry
 @Component
 struct HWClock {
-  @State message: string = 'Hello World'
+  myStore: MyClockStore = new MyClockStore()
+  @State
+  list: ClockItemClass[] = []
+  //页面显示就要拿到闹钟列表，不是只有第一次才拿
+  //用onPageShow(), 不是aboutToAppear()
+  async onPageShow() {
+    this.list = await this.myStore.getClockList()
+  }
 
   build() {
     Stack({ alignContent: Alignment.Bottom }) {
@@ -14,9 +22,9 @@ struct HWClock {
         CanvasClock()
         //放置n个闹钟任务
         List({space: 10}) {
-          ForEach([1,2,3,4,5],(item) => {
+          ForEach(this.list,(item) => {
             ListItem() {
-              ClockItem()
+              ClockItem({item})
             }
           })
         }
@@ -104,13 +112,14 @@ struct CanvasClock {
 
 @Component
 export struct ClockItem {
+  item: Partial<ClockItemClass> = {}
   build() {
     Row(){
       Column({ space: 5 }) {
         Row({ space: 5 }){
-          Text('下午')
+          Text(`${this.item.hour > 12 ? '下午' : '上午'}`)
             .fontColor('#666')
-          Text('04:30')
+          Text(`${this.item.hour}:${this.item.minute}`)
             .fontWeight(600)
             .fontSize(18)
         }
