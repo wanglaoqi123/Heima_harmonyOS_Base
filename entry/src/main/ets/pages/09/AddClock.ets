@@ -85,6 +85,24 @@ struct AddClock {
     }
   }
 
+  //删除闹钟
+  async delClock() {
+    //只有有这个闹铃才能删除
+    if (this.currentClock.id) {
+      //删除闹钟--首选项，取消闹铃
+      if (this.currentClock.reminderId) {
+        reminderAgentManager.cancelReminder(this.currentClock.reminderId)
+      }
+      let list = await this.myStore.getClockList()
+      // const index = list.findIndex(item => item.id === this.currentClock.id)
+      // list.splice(index, 1)
+      //使用filter过滤
+      list = list.filter(item => item.id !== this.currentClock.id)
+      this.myStore.setClockList(JSON.stringify(list))
+      router.back()
+    }
+  }
+
   build() {
     Navigation() {
       TimePicker({ selected: this.currentTime.time })
@@ -103,6 +121,9 @@ struct AddClock {
         .opacity(0.4)
         .margin({
           top: 30
+        })
+        .onClick(() => {
+          this.delClock()
         })
     }
     .title("新建闹钟")

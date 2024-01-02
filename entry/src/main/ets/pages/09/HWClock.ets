@@ -1,6 +1,7 @@
 import router from '@ohos.router'
 import { ClockItemClass, MyClockStore } from './ClockStore'
 import promptAction from '@ohos.promptAction'
+import reminderAgentManager from '@ohos.reminderAgentManager'
 @Entry
 @Component
 struct HWClock {
@@ -25,7 +26,29 @@ struct HWClock {
         List({space: 10}) {
           ForEach(this.list,(item: ClockItemClass) => {
             ListItem() {
-              ClockItem({item})
+              ClockItem({item, changeClockEnable: (id: string) => {
+                if (item.reminderId) {
+                  if (item.enabled) {
+                    //取消
+                    reminderAgentManager.cancelReminder(item.reminderId)
+                  } else {
+                    //新建
+                    let reminderObj: reminderAgentManager.ReminderRequestAlarm = {
+                      reminderType: reminderAgentManager.ReminderType.REMINDER_TYPE_ALARM,
+                      hour: item.hour,
+                      minute: item.minute,
+                      daysOfWeek: [],
+                      ringDuration: 60
+                    }
+                    reminderAgentManager.publishReminder(reminderObj)
+                  }
+                  item.enabled = !item.enabled
+                  const index = this.list.findIndex(item => item.id === id)
+                  this.list.splice(index, 1) //删除这个选项
+                  this.list.splice(index, 0, item) //添加这个选项
+                  this.myStore.setClockList(JSON.stringify(this.list))
+                }
+              }})
                 .onClick(() => {
                   router.pushUrl({
                     url: "pages/09/AddClock",
@@ -122,6 +145,7 @@ struct CanvasClock {
 @Component
 export struct ClockItem {
   item: Partial<ClockItemClass> = {}
+  changeClockEnable: (id: string) => void = () => {}
   build() {
     Row(){
       Column({ space: 5 }) {
@@ -144,7 +168,10 @@ export struct ClockItem {
       .alignItems(HorizontalAlign.Start)
 
       // 开关
-      Toggle({ type: ToggleType.Switch , isOn: true })
+      Toggle({ type: ToggleType.Switch , isOn: this.item.enabled })
+        .onChange(() => {
+          this.changeClockEnable(this.item.id)
+        })
     }
     .height(64)
     .padding({ left: 20, right: 15 })
