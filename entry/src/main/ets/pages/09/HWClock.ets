@@ -78,8 +78,8 @@ struct CanvasClock {
       this.context.drawImage(this.panImage, 0, 0, this.canvasSize, this.canvasSize)
       //画时针 分针 秒针
       const currentTime = new Date() // 获取当前时间
-      const hour: number = currentTime.getHours() % 12 / 12 * 360
-      const min: number = currentTime.getMinutes() / 60 * 360
+      const hour: number = currentTime.getHours() % 12 / 12 * 360 + currentTime.getMinutes() / 60 * 30
+      const min: number = currentTime.getMinutes() / 60 * 360 + currentTime.getSeconds() / 60 * 5
       const second: number = currentTime.getSeconds() / 60 * 360
       this.drawPointer(this.hourImage, hour)
       this.drawPointer(this.minImage, min)
