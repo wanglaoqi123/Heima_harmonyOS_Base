@@ -1,7 +1,6 @@
 import router from '@ohos.router'
 import { ClockItemClass, MyClockStore } from './ClockStore'
 import util from '@ohos.util'
-import promptAction from '@ohos.promptAction'
 import reminderAgentManager from '@ohos.reminderAgentManager'
 
 @Entry
@@ -17,6 +16,39 @@ struct AddClock {
   async addClock() {
     const hour = this.currentTime.time.getHours()
     const minute = this.currentTime.time.getMinutes()
+    const list = await this.myStore.getClockList()
+    // 系统代理一个闹钟之后，才会返回一个id
+    let reminderObj: reminderAgentManager.ReminderRequestAlarm = {
+      reminderType: reminderAgentManager.ReminderType.REMINDER_TYPE_ALARM,
+      hour,
+      minute,
+      daysOfWeek: [],
+      ringDuration: 60
+    }
+
+    //编辑闹铃
+    if (this.currentClock.id) {
+      //取消闹铃
+      if (this.currentClock.reminderId) {
+        reminderAgentManager.cancelReminder(this.currentClock.reminderId)
+      }
+      //新增闹铃
+      const reminderId = await reminderAgentManager.publishReminder(reminderObj)
+      this.currentClock.reminderId = reminderId
+      this.currentClock.hour =  hour
+      this.currentClock.minute =  minute
+      const index: number = list.findIndex(item => item.id === this.currentClock.id)
+      list.splice(index, 1, this.currentClock as ClockItemClass)
+      //写入磁盘
+      this.myStore.setClockList(JSON.stringify(list))
+      router.back()
+      return
+    }
+
+    //删除闹铃
+    //新增闹铃
+    //写入磁盘
+
     //声明一个闹铃
     let obj: ClockItemClass = {
       hour,
@@ -26,20 +58,31 @@ struct AddClock {
       // remindId:
     }
 
-    // 系统代理一个闹钟之后，才会返回一个id
-    let reminderObj: reminderAgentManager.ReminderRequestAlarm = {
-      reminderType: reminderAgentManager.ReminderType.REMINDER_TYPE_ALARM,
-      hour,
-      minute,
-      daysOfWeek: [],
-      ringDuration: 60
-    }
     const reminderId = await reminderAgentManager.publishReminder(reminderObj)
     obj.reminderId = reminderId //拿到代理返回的id，就可以写入首选项了
-    const list = await this.myStore.getClockList()
+
     list.push(obj)
     this.myStore.setClockList(JSON.stringify(list))
     router.back()
+  }
+  //尽量不适用async修饰aboutToAppear
+  async aboutToAppear() {
+    const obj = router.getParams() as ClockParams
+    //判空 传进来的参数如果为空，obj是undefined
+    if (obj && obj.id) {
+      const list = await this.myStore.getClockList()
+      //记录当前闹铃的目的是为了存储
+      this.currentClock = list.find(item => item.id === obj.id)
+      //将当前闹铃时间传递给时间选择器
+      //arkTs只有第一层的数据更新再能导致UI更新 所以下面两行代码不生效
+      // this.currentTime.time.setHours(this.currentClock.hour)
+      // this.currentTime.time.setMinutes(this.currentClock.minute)
+      const time = new Date()
+      time.setHours(this.currentClock.hour)
+      time.setMinutes(this.currentClock.minute)
+      this.currentTime.time = time
+
+    }
   }
 
   build() {
@@ -78,4 +121,8 @@ struct AddClock {
 
 class CurrentTime {
   time: Date = new Date()
+}
+
+class ClockParams {
+  id: string = ""
 }

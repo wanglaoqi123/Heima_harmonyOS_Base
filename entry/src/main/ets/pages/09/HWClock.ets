@@ -1,5 +1,6 @@
 import router from '@ohos.router'
 import { ClockItemClass, MyClockStore } from './ClockStore'
+import promptAction from '@ohos.promptAction'
 @Entry
 @Component
 struct HWClock {
@@ -22,9 +23,17 @@ struct HWClock {
         CanvasClock()
         //放置n个闹钟任务
         List({space: 10}) {
-          ForEach(this.list,(item) => {
+          ForEach(this.list,(item: ClockItemClass) => {
             ListItem() {
               ClockItem({item})
+                .onClick(() => {
+                  router.pushUrl({
+                    url: "pages/09/AddClock",
+                    params: {
+                      id: item.id
+                    }
+                  })
+                })
             }
           })
         }
