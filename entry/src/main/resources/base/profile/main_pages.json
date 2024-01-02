@@ -48,6 +48,7 @@
     "pages/08/WeChat",
     "pages/09/ClockCase",
     "pages/09/HWClock",
-    "pages/09/Rotate"
+    "pages/09/Rotate",
+    "pages/09/AddClock"
   ]
 }

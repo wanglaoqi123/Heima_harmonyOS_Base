@@ -1,3 +1,4 @@
+import router from '@ohos.router'
 @Entry
 @Component
 struct HWClock {
@@ -36,6 +37,11 @@ struct HWClock {
         .borderRadius(25)
         .textAlign(TextAlign.Center)
         .margin({ bottom: 50 })
+        .onClick(() => {
+          router.pushUrl({
+            url: 'pages/09/AddClock'
+          })
+        })
     }
 
   }
